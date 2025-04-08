@@ -3,8 +3,10 @@ version: '3.9'
 services:
   streamlit:
     build: .
+    depends_on:
+      - app
     ports:
-      - "8501:8501"
+      - "5432:5432"
     volumes:
       - .:/app
   db:

@@ -2,6 +2,9 @@ import streamlit as st
 import pandas as pd
 import psycopg2
 from sqlalchemy import create_engine
+import os
+
+db_url = r"postgresql://postgres:admin@db:5432/demo"
 
 
 DB_PARAMS = {
@@ -17,10 +20,7 @@ DB_PARAMS = {
 def get_db_connection():
     """Establish a connection to the PostgreSQL database."""
     try:
-        engine = create_engine(
-            f"postgresql+psycopg2://{DB_PARAMS['user']}:{DB_PARAMS['password']}@"
-            f"{DB_PARAMS['host']}:{DB_PARAMS['port']}/{DB_PARAMS['dbname']}"
-        )
+        engine = create_engine(db_url)
         conn = engine.connect()
         return conn
     except Exception as e:
