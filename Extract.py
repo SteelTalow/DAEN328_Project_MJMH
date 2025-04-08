@@ -5,6 +5,7 @@ import json  # To handle JSON data from APIs
 import matplotlib.pyplot as plt  # Optional, for data visualization
 import os # working with operating system functions
 
+#Function to fetch api data. Repurposed from assignment 1
 def fetch_api_data(api_url, output_file, tot_records, batch_size=100, num_records=None):
     """
     Fetches all data from the API in chunks using $limit and $offset parameters, 
@@ -77,19 +78,32 @@ def fetch_api_data(api_url, output_file, tot_records, batch_size=100, num_record
     print(f"Fetched a total of {len(all_data)} records. Data saved to {output_file}.")
     return all_data
 
-
-api_url = "https://data.cityofnewyork.us/resource/4b4i-vvec.json"
+#Data for 2023
+api_url_2023 = "https://data.cityofnewyork.us/resource/4b4i-vvec.json"
  
 # Store json data set. You will need to adjust this paths
-json_file_path = "C:\\Users\\jamda\\DAEN_328\\Project_1_NY_Covid\\api_data_taxi.json"
+json_file_path_2023 = "C:\\Users\\jamda\\DAEN_328\\Project_1_NY_Covid\\api_data_taxi_2023.json"
 
 # Fetch the data
-api_data = fetch_api_data(api_url = api_url, output_file = json_file_path,tot_records = 38310226, batch_size=100, num_records=30000)
+api_data_2023 = fetch_api_data(api_url = api_url_2023, output_file = json_file_path_2023,tot_records = 38310226, batch_size=100, num_records=36500)
 
 # Verify the total number of records fetched
-print(f"Total records fetched: {len(api_data)}")
-
-#All above is for 2023. This will need to be edited and repeated for other years. 
+print(f"Total records fetched: {len(api_data_2023)}")
 
 
+#Data for 2019
+
+api_url_2019 = "https://data.cityofnewyork.us/resource/2upf-qytp.json" # make sure to actually get new api
  
+# remember to change tot_records
+json_file_path_2019 = "C:\\Users\\jamda\\DAEN_328\\Project_1_NY_Covid\\api_data_taxi_2019.json"
+api_data_2019 = fetch_api_data(api_url = api_url_2019, output_file = json_file_path_2019,tot_records = 84399019, batch_size=100, num_records=36500)
+print(f"Total records fetched: {len(api_data_2019)}")
+
+#Data for 2021
+api_url_2021 = "https://data.cityofnewyork.us/resource/m6nq-qud6.json" # make sure to actually get new api
+ 
+# remember to change tot_records
+json_file_path_2021 = "C:\\Users\\jamda\\DAEN_328\\Project_1_NY_Covid\\api_data_taxi_2021.json"
+api_data_2021 = fetch_api_data(api_url = api_url_2021, output_file = json_file_path_2021,tot_records = 30904072, batch_size=100, num_records=36500)
+print(f"Total records fetched: {len(api_data_2021)}")
