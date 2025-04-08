@@ -3,9 +3,18 @@ import pandas as pd
 import numpy 
 import csv
 
-filename = "taxi_data.json"
-df = pd.read_json(filename)
-df.to_csv('taxidata.csv', index=False)
+taxi_2019_data = "Json_data/api_data_taxi_2019.json"
+taxi_2021_data = "Json_data/api_data_taxi_2021.json"
+taxi_2023_data = "Json_data/api_data_taxi_2023.json"
+
+df_2019 = pd.read_json(taxi_2019_data)
+df_2021 = pd.read_json(taxi_2021_data)
+df_2023 = pd.read_json(taxi_2023_data)
+
+df = pd.concat([df_2019, df_2021, df_2023], ignore_index=True)
+df.to_json("combined.json", orient='records', lines=False)
+
+df.to_csv("taxidata.csv", index=False)
 
 def dropAirport(df):
     if "airport_fee" in df.columns:
@@ -38,5 +47,5 @@ def totalTime(pickuptime, dropofftime):
     return total_time
 df["total_time"] = df.apply(lambda row: totalTime(row["pickup_time"], row["dropoff_time"]), axis=1)
 
-
 print(df.head())
+df.to_csv(r"cleaned_taxidata.csv", index=False)
