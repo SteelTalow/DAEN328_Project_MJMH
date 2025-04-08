@@ -16,11 +16,7 @@ df.to_json("combined.json", orient='records', lines=False)
 
 df.to_csv("taxidata.csv", index=False)
 
-def dropAirport(df):
-    if "airport_fee" in df.columns:
-        df = df.drop(columns = ["airport_fee"])
-
-dropAirport(df)
+df = df.drop(columns = ["congestion_surcharge","airport_fee"])
 
 def seperatePickup(date):
     split_array = date.split("T")
