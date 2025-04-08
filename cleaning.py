@@ -53,7 +53,7 @@ def clean_record(record):
 
 # Replace with your actual filename
 input_filename = 'taxi_data.json'
-output_filename = 'cleaned_taxi_data.json'
+output_filename = 'cleaned_taxi_data.csv'
 
 # Load the data from the JSON file
 with open(input_filename, 'r') as f:
@@ -65,9 +65,10 @@ if isinstance(data, list):
 else:
     cleaned = clean_record(data)
 
-# Save the cleaned data back to JSON
-with open(output_filename, 'w') as f:
-    json.dump(cleaned, f, indent=2)
+df = pd.DataFrame(cleaned)
+
+# Save the cleaned data to CSV
+df.to_csv(output_filename, index=False)
 
 print("Cleaning complete. Saved to:", output_filename)
 
