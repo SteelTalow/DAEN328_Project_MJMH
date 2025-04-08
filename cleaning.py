@@ -1,5 +1,6 @@
 import json
 from datetime import datetime
+import pandas as pd
 
 def clean_record(record):
     # Convert types
@@ -17,14 +18,34 @@ def clean_record(record):
             record[key] = float(record[key])
     
     # Format datetime strings to remove milliseconds
-    datetime_keys = ['tpep_pickup_datetime', 'tpep_dropoff_datetime']
-    for key in datetime_keys:
-        if key in record:
-            try:
-                dt = datetime.fromisoformat(record[key])
-                record[key] = dt.strftime('%Y-%m-%dT%H:%M:%S')
-            except ValueError:
-                pass  # Keep original if it fails
+    try:
+        pickup_raw = record.get('tpep_pickup_datetime')
+        dropoff_raw = record.get('tpep_dropoff_datetime')
+
+        # Debugging: log the raw datetime strings
+        print(f"Raw pickup: {pickup_raw}")
+        print(f"Raw dropoff: {dropoff_raw}")
+
+        # Use pandas to handle datetime parsing
+        pickup = pd.to_datetime(pickup_raw, errors='coerce')  # `coerce` will return NaT on error
+        dropoff = pd.to_datetime(dropoff_raw, errors='coerce')
+
+        # Check if parsing failed
+        if pd.isna(pickup) or pd.isna(dropoff):
+            print(f"Parsing error: Invalid datetime format for pickup: {pickup_raw} or dropoff: {dropoff_raw}")
+            record['trip_duration_minutes'] = None
+        else:
+            # Calculate the duration in minutes
+            duration = (dropoff - pickup).total_seconds() / 60
+            record['trip_duration_minutes'] = float(f'{duration:.2f}')
+
+            # Optionally, overwrite with consistent formatting (if you want)
+            record['tpep_pickup_datetime'] = pickup.strftime('%Y-%m-%dT%H:%M:%S')
+            record['tpep_dropoff_datetime'] = dropoff.strftime('%Y-%m-%dT%H:%M:%S')
+
+    except Exception as e:
+        print("Datetime error:", e)
+        record['trip_duration_minutes'] = None
 
     return record
 
@@ -34,22 +55,23 @@ def clean_record(record):
 input_filename = 'taxi_data.json'
 output_filename = 'cleaned_taxi_data.json'
 
+# Load the data from the JSON file
 with open(input_filename, 'r') as f:
     data = json.load(f)
 
-# If it's a list of records
+# If it's a list of records, clean each record
 if isinstance(data, list):
     cleaned = [clean_record(record) for record in data]
 else:
     cleaned = clean_record(data)
 
+# Save the cleaned data back to JSON
 with open(output_filename, 'w') as f:
     json.dump(cleaned, f, indent=2)
 
 print("Cleaning complete. Saved to:", output_filename)
 
 
-import json
 
 def find_nulls(record, path=""):
     nulls = []
