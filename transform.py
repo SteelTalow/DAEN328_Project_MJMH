@@ -58,8 +58,11 @@ def defaultPaymentType(payment):
         pay = 5
     else:
         pay = payment
-    return payment
+    return pay
 df["payment_type"] = df["payment_type"].apply(defaultPaymentType)
 
+df = df[~(df['vendorid'].isnull() | (df['vendorid'] == ''))]       
+    
+df = df.drop(columns = ["tpep_pickup_datetime","tpep_dropoff_datetime", "ratecodeid","store_and_fwd_flag"])
 print(df.head())
 df.to_csv(r"cleaned_taxidata.csv", index=False)
