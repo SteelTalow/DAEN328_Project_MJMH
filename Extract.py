@@ -81,8 +81,8 @@ def fetch_api_data(api_url, output_file, tot_records, batch_size=100, num_record
 #Data for 2023
 api_url_2023 = "https://data.cityofnewyork.us/resource/4b4i-vvec.json"
  
-# Store json data set. You will need to adjust this paths
-json_file_path_2023 = "C:\\Users\\jamda\\DAEN_328\\Project_1_NY_Covid\\api_data_taxi_2023.json"
+# Store json data set
+json_file_path_2023 = "Json_data/api_data_taxi_2023.json"
 
 # Fetch the data
 api_data_2023 = fetch_api_data(api_url = api_url_2023, output_file = json_file_path_2023,tot_records = 38310226, batch_size=100, num_records=36500)
@@ -92,18 +92,13 @@ print(f"Total records fetched: {len(api_data_2023)}")
 
 
 #Data for 2019
-
-api_url_2019 = "https://data.cityofnewyork.us/resource/2upf-qytp.json" # make sure to actually get new api
- 
-# remember to change tot_records
-json_file_path_2019 = "C:\\Users\\jamda\\DAEN_328\\Project_1_NY_Covid\\api_data_taxi_2019.json"
+api_url_2019 = "https://data.cityofnewyork.us/resource/2upf-qytp.json"
+json_file_path_2019 = "Json_data/api_data_taxi_2019.json"
 api_data_2019 = fetch_api_data(api_url = api_url_2019, output_file = json_file_path_2019,tot_records = 84399019, batch_size=100, num_records=36500)
 print(f"Total records fetched: {len(api_data_2019)}")
 
 #Data for 2021
-api_url_2021 = "https://data.cityofnewyork.us/resource/m6nq-qud6.json" # make sure to actually get new api
- 
-# remember to change tot_records
-json_file_path_2021 = "C:\\Users\\jamda\\DAEN_328\\Project_1_NY_Covid\\api_data_taxi_2021.json"
+api_url_2021 = "https://data.cityofnewyork.us/resource/m6nq-qud6.json"  
+json_file_path_2021 = "Json_data/api_data_taxi_2021.json"
 api_data_2021 = fetch_api_data(api_url = api_url_2021, output_file = json_file_path_2021,tot_records = 30904072, batch_size=100, num_records=36500)
 print(f"Total records fetched: {len(api_data_2021)}")
