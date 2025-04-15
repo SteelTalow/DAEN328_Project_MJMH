@@ -4,7 +4,15 @@ WORKDIR /app
 
 COPY . .
 
+RUN apt-get update && apt-get install -y postgresql-client
+
 RUN pip install --no-cache-dir -r requirements.txt
 
-CMD ["python", "apple.py"]
-CMD ["streamlit", "run", "app.py"]
+EXPOSE 8501
+
+RUN chmod +x run_scripts.sh
+
+ENTRYPOINT ["./run_scripts.sh"]
+
+#CMD ["./run_scripts.sh"]
+#CMD ["streamlit", "run", "app.py"]

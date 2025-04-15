@@ -1,6 +1,14 @@
 version: '3.9'
 
 services:
+  streamlit:
+    build: .
+    depends_on:
+      - app
+    ports:
+      - "5432:5432"
+    volumes:
+      - .:/app
   db:
     image: postgres:13
     environment:
