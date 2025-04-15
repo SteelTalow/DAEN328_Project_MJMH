@@ -21,11 +21,33 @@ def load_postgress(taxi_data):
         conn.execute(text("DROP TABLE IF EXISTS taxi_trips"))
         conn.execute(text("""
             CREATE TABLE combined_taxi_data(
-            pickup_datetime TIMESTAMP,
-            dropoff_datetime TIMESTAMP,
+            id SERIAL PRIMARY KEY,
+            vendorid INTEGER,
+            tpep_pickup_datetime TIMESTAMP,
+            tpep_dropoff_datetime TIMESTAMP,
             passenger_count INTEGER,
             trip_distance FLOAT,
-            total_amount FLOAT
+            ratecodeid INTEGER,
+            store_and_fwd_flag VARCHAR(1)
+            pulocationid INTEGER,
+            dolocationid INTEGER,
+            payment_type INTEGER,
+            fare_amount FLOAT,
+            extra FLOAT,
+            mta_tax FLOAT,
+            tip_amount FLOAT,
+            tolls_amount FLOAT,
+            improvement_surcharge FLOAT,
+            total_amount FLOAT,
+            pickup_date DATETIME,
+            pickup_time TIME,
+            dropoff_date DATETIME,
+            dropoff_time TIME,
+            total_time TIME
+
+
+
+                          
         )
     """))
 
