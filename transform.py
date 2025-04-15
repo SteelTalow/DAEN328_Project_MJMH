@@ -16,6 +16,7 @@ df.to_json("combined.json", orient='records', lines=False)
 
 df.to_csv("taxidata.csv", index=False)
 
+#might have to drop ratecodeid and store_and_fwd_flag
 df = df.drop(columns = ["congestion_surcharge","airport_fee"])
 
 def seperatePickup(date):
@@ -42,6 +43,23 @@ def totalTime(pickuptime, dropofftime):
     total_time = dropoff_time - pickup_time
     return total_time
 df["total_time"] = df.apply(lambda row: totalTime(row["pickup_time"], row["dropoff_time"]), axis=1)
+
+def defaultPassenger(passengerCount):
+    if pd.isnull(passengerCount):
+        count = 1
+    else:
+        count = passengerCount
+    return count
+
+df["passenger_count"] = df["passenger_count"].apply(defaultPassenger)
+
+def defaultPaymentType(payment):
+    if pd.isnull(payment):
+        pay = 5
+    else:
+        pay = payment
+    return payment
+df["payment_type"] = df["payment_type"].apply(defaultPaymentType)
 
 print(df.head())
 df.to_csv(r"cleaned_taxidata.csv", index=False)
