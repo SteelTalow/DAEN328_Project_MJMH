@@ -23,12 +23,8 @@ def load_postgress(taxi_data):
             CREATE TABLE combined_taxi_data(
             id SERIAL PRIMARY KEY,
             vendorid INTEGER,
-            tpep_pickup_datetime TIMESTAMP,
-            tpep_dropoff_datetime TIMESTAMP,
             passenger_count INTEGER,
             trip_distance FLOAT,
-            ratecodeid INTEGER,
-            store_and_fwd_flag VARCHAR(1),
             pulocationid INTEGER,
             dolocationid INTEGER,
             payment_type INTEGER,
