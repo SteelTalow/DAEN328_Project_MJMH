@@ -1,14 +1,7 @@
 version: '3.9'
 
 services:
-  streamlit:
-    build: .
-    depends_on:
-      - app
-    ports:
-      - "5432:5432"
-    volumes:
-      - .:/app
+  
   db:
     image: postgres:13
     environment:
@@ -20,16 +13,21 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
 
+  
   app:
     build: .
+    ports:
+      - "8501:8501"
     depends_on:
       - db
+    volumes:
+      - .:/app
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_HOST : ${POSTGRES_HOST}
-      POSTGRES_PORT : ${POSTGRES_PORT}
+      POSTGRES_HOST: db
+      POSTGRES_PORT: 5432
 
 volumes:
   db_data:

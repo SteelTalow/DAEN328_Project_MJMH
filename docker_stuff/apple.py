@@ -1,8 +1,8 @@
 import os
 from sqlalchemy import create_engine, text
 
-print("📝 Welcome! Let's add your quote to the PostgreSQL database.")
-quote = "Here is my quote"
+print("📝 Welcome! Adding the quote to the postgres database.")
+quote = "This is an example quote~!"
 DB_HOST = os.getenv("POSTGRES_HOST")
 DB_PORT = os.getenv("POSTGRES_PORT")
 DB_USER = os.getenv("POSTGRES_USER")

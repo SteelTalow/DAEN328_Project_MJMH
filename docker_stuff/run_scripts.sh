@@ -8,4 +8,4 @@ echo "✅ Postgres is ready!"
 
 python apple.py
 
-streamlit run app.py --server.port=5432
+streamlit run app.py --server.port=8501
