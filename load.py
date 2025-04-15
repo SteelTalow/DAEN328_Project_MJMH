@@ -1,5 +1,5 @@
 import pandas as pd
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 import os
 import pandas as pd
 import psycopg2
@@ -15,8 +15,8 @@ def load_postgress(taxi_data):
     db_url = f"postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
     engine = create_engine(db_url)
 
-    df = pd.read_csv("/app/data/cleaned_taxidata.csv") # this needs to be changed to whatever we are saving the cleaned data to
-
+    df = pd.read_csv("/Json_data/cleaned_taxidata.csv") 
+    #This creates the schema for the data to be loaded into
     with engine.connect() as conn:
         conn.execute(text("DROP TABLE IF EXISTS taxi_trips"))
         conn.execute(text("""
@@ -28,7 +28,7 @@ def load_postgress(taxi_data):
             passenger_count INTEGER,
             trip_distance FLOAT,
             ratecodeid INTEGER,
-            store_and_fwd_flag VARCHAR(1)
+            store_and_fwd_flag VARCHAR(1),
             pulocationid INTEGER,
             dolocationid INTEGER,
             payment_type INTEGER,
@@ -39,24 +39,14 @@ def load_postgress(taxi_data):
             tolls_amount FLOAT,
             improvement_surcharge FLOAT,
             total_amount FLOAT,
-            pickup_date DATETIME,
+            pickup_date TIMESTAMP,
             pickup_time TIME,
-            dropoff_date DATETIME,
+            dropoff_date TIMESTAMP,
             dropoff_time TIME,
-            total_time TIME
-
-
-
-                          
+            total_time TIME               
         )
     """))
+    #loads df into PostgresSQL
+    df.to_sql('combined_taxi_data', engine, if_exists='replace', index=False)
 
-    df.to_sql('your_table_name', engine, if_exists='replace', index=False)
-
-
-
-
-#Code below will upload without first needing to make schema. Investigate whether that is what we want
-
-#make sure to figure out exactly how/what the connection paramaters will be
 
