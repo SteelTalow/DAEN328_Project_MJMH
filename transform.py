@@ -1,6 +1,6 @@
 import json
 import pandas as pd
-import numpy 
+import numpy as np
 import csv
 
 taxi_2019_data = "Json_data/api_data_taxi_2019.json"
@@ -60,6 +60,17 @@ def defaultPaymentType(payment):
         pay = payment
     return pay
 df["payment_type"] = df["payment_type"].apply(defaultPaymentType)
+
+def costPerMile(totalAmount, tripDistance):
+    cpm = totalAmount/tripDistance
+    return cpm
+df["cost_per_mile"] = df.apply(
+    lambda row: row["total_amount"] / row["trip_distance"] if row["trip_distance"] > 0 else 0,
+    axis=1
+)
+
+
+# def costPerMinute
 
 df = df[~(df['vendorid'].isnull() | (df['vendorid'] == ''))]       
     

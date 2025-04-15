@@ -39,7 +39,8 @@ def load_postgress(taxi_data):
             pickup_time TIME,
             dropoff_date TIMESTAMP,
             dropoff_time TIME,
-            total_time TIME               
+            total_time TIME,
+            cost_per_mile FLOAT             
         )
     """))
     #loads df into PostgresSQL
