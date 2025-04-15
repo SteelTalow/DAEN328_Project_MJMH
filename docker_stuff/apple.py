@@ -3,7 +3,13 @@ from sqlalchemy import create_engine, text
 
 print("📝 Welcome! Let's add your quote to the PostgreSQL database.")
 quote = "Here is my quote"
-db_url = os.getenv("DATABASE_URL")
+DB_HOST = os.getenv("POSTGRES_HOST")
+DB_PORT = os.getenv("POSTGRES_PORT")
+DB_USER = os.getenv("POSTGRES_USER")
+DB_PASS = os.getenv("POSTGRES_PASSWORD")
+DB_NAME = os.getenv("POSTGRES_DB")
+#establish connection paramaters with postgres
+db_url = f"postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 engine = create_engine(db_url)
 
 with engine.begin() as conn:
