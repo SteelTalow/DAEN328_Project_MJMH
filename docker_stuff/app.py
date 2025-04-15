@@ -4,16 +4,17 @@ import psycopg2
 from sqlalchemy import create_engine
 import os
 
-db_url = r"postgresql://postgres:admin@db:5432/demo"
+ # Load env vars
+DB_HOST = os.getenv("POSTGRES_HOST")
+DB_PORT = os.getenv("POSTGRES_PORT")
+DB_USER = os.getenv("POSTGRES_USER")
+DB_PASS = os.getenv("POSTGRES_PASSWORD")
+DB_NAME = os.getenv("POSTGRES_DB")
+#establish connection paramaters with postgres
+db_url = f"postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 
+#db_url = r"postgresql://postgres:admin@db:5432/demo"
 
-DB_PARAMS = {
-    "dbname": "demo",
-    "user": "postgres",
-    "password": "admin",
-    "host": "localhost",  # Change if hosted remotely
-    "port": "5432"
-}
 
 # Function to Connect to PostgreSQL
 @st.cache_resource
