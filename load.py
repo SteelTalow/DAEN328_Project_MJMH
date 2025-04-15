@@ -11,13 +11,25 @@ def load_postgress(taxi_data):
     DB_USER = os.getenv("POSTGRES_USER")
     DB_PASS = os.getenv("POSTGRES_PASSWORD")
     DB_NAME = os.getenv("POSTGRES_DB")
-
+    #establish connection paramaters with postgres
     db_url = f"postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
     engine = create_engine(db_url)
 
-    df = pd.read_csv("/app/data/cleaned_taxidata.csv")
+    df = pd.read_csv("/app/data/cleaned_taxidata.csv") # this needs to be changed to whatever we are saving the cleaned data to
 
-    
+    with engine.connect() as conn:
+        conn.execute(text("DROP TABLE IF EXISTS taxi_trips"))
+        conn.execute(text("""
+            CREATE TABLE combined_taxi_data(
+            pickup_datetime TIMESTAMP,
+            dropoff_datetime TIMESTAMP,
+            passenger_count INTEGER,
+            trip_distance FLOAT,
+            total_amount FLOAT
+        )
+    """))
+
+    df.to_sql('your_table_name', engine, if_exists='replace', index=False)
 
 
 
@@ -26,11 +38,3 @@ def load_postgress(taxi_data):
 
 #make sure to figure out exactly how/what the connection paramaters will be
 
-# Load your CSV
-df = pd.read_csv('your_file.csv')
-
-# Create DB connection (edit user/pass/db/host as needed)
-engine = create_engine('postgresql://username:password@localhost:5432/your_db')
-
-# Send to Postgres (will auto-create table)
-df.to_sql('your_table_name', engine, if_exists='replace', index=False)
