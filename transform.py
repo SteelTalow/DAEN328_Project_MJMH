@@ -15,7 +15,7 @@ df_2021 = pd.read_json(taxi_2021_data)
 df_2023 = pd.read_json(taxi_2023_data)
 
 df = pd.concat([df_2019, df_2021, df_2023], ignore_index=True)
-df.to_json("combined.json", orient='records', lines=False)
+df.to_json(os.path.join(base_dir, "Data", "combined.json"), orient='records', lines=False)
 
 df.to_csv(os.path.join(base_dir, "Data", "taxidata.csv"), index=False)
 
