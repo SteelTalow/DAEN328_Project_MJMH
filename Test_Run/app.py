@@ -115,10 +115,9 @@ else:
         labels={'ride_count': 'Number of Rides', 'month_name': 'Month'}
     )
     st.plotly_chart(fig)
-else:
-    st.warning("⚠️ No data selected. Please choose at least one year from the sidebar.")
 
-        # Extract the year directly from the first 4 characters of 'pickup_date'
+
+# Extract the year directly from the first 4 characters of 'pickup_date'
 data['year'] = data['pickup_date'].astype(str).str[:4]
 data['year'] = data['year'].astype(int)
 
