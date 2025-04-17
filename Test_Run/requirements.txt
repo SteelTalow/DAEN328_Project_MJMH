@@ -1,0 +1,9 @@
+#Stuff here yet!
+
+sqlalchemy
+psycopg2-binary
+pandas
+streamlit
+numpy
+
+
