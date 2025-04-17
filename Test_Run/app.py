@@ -4,6 +4,8 @@ import psycopg2
 from sqlalchemy import create_engine
 import os
 import plotly.express as px
+import matplotlib.pyplot as plt
+import seaborn as sns
 
  # Load env vars
 DB_HOST = os.getenv("POSTGRES_HOST")
@@ -113,6 +115,28 @@ else:
         labels={'ride_count': 'Number of Rides', 'month_name': 'Month'}
     )
     st.plotly_chart(fig)
+else:
+    st.warning("⚠️ No data selected. Please choose at least one year from the sidebar.")
+
+        # Extract the year directly from the first 4 characters of 'pickup_date'
+data['year'] = data['pickup_date'].astype(str).str[:4]
+data['year'] = data['year'].astype(int)
+
+        # Filter for the years 2019, 2021, and 2023
+filtered = data[data['year'].isin([2019, 2021, 2023])]
+
+        # Drop rows with missing 'passenger_count' values
+filtered = filtered.dropna(subset=['passenger_count'])
+
+        # Create the boxplot
+fig, ax = plt.subplots()
+sns.boxplot(x='year', y='passenger_count', data=filtered, ax=ax)
+ax.set_title("Passenger Count by Year")
+ax.set_xlabel("Year")
+ax.set_ylabel("Passenger Count")
+        
+# Display the plot in Streamlit
+st.pyplot(fig)
 
 st.dataframe(full_data)
 

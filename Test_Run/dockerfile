@@ -14,4 +14,4 @@ RUN ls -la /app
 
 RUN chmod +x run_scripts.sh
 
-ENTRYPOINT ["./run_scripts.sh"]
+ENTRYPOINT ["/app/run_scripts.sh"]
