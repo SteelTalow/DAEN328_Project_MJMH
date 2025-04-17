@@ -17,7 +17,7 @@ def load_postgress():
     db_url = f"postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
     engine = create_engine(db_url)
 
-    df = pd.read_csv(r"Json_data/cleaned_taxidata.csv") 
+    df = pd.read_csv(r"Data/cleaned_taxidata.csv") 
     #This creates the schema for the data to be loaded into
     with engine.connect() as conn:
         conn.execute(text("DROP TABLE IF EXISTS taxi_trips"))
