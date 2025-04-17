@@ -2,19 +2,22 @@ import json
 import pandas as pd
 import numpy as np
 import csv
+import os
 
-taxi_2019_data = "Json_data/api_data_taxi_2019.json"
-taxi_2021_data = "Json_data/api_data_taxi_2021.json"
-taxi_2023_data = "Json_data/api_data_taxi_2023.json"
+base_dir = os.getcwd()
+
+taxi_2019_data = os.path.join(base_dir, "Data", "api_data_taxi_2019.json")
+taxi_2021_data = os.path.join(base_dir, "Data", "api_data_taxi_2021.json")
+taxi_2023_data = os.path.join(base_dir, "Data", "api_data_taxi_2023.json")
 
 df_2019 = pd.read_json(taxi_2019_data)
 df_2021 = pd.read_json(taxi_2021_data)
 df_2023 = pd.read_json(taxi_2023_data)
 
 df = pd.concat([df_2019, df_2021, df_2023], ignore_index=True)
-df.to_json("combined.json", orient='records', lines=False)
+df.to_json(os.path.join(base_dir, "Data", "combined.json"), orient='records', lines=False)
 
-df.to_csv("taxidata.csv", index=False)
+df.to_csv(os.path.join(base_dir, "Data", "taxidata.csv"), index=False)
 
 #might have to drop ratecodeid and store_and_fwd_flag
 df = df.drop(columns = ["congestion_surcharge","airport_fee"])
@@ -76,4 +79,4 @@ df = df[~(df['vendorid'].isnull() | (df['vendorid'] == ''))]
     
 df = df.drop(columns = ["tpep_pickup_datetime","tpep_dropoff_datetime", "ratecodeid","store_and_fwd_flag"])
 print(df.head())
-df.to_csv(r"Json_data/cleaned_taxidata.csv", index=False)
+df.to_csv(r"Data/cleaned_taxidata.csv", index=False)
