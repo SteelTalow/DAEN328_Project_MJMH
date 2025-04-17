@@ -46,53 +46,75 @@ def fetch_data():
         st.error(f"❌ Error fetching data: {e}")
         return pd.DataFrame()
 
-data = fetch_data()
-if not data.empty:
+def fetch_all_data():
+    """Fetch all data from a PostgreSQL table and handle errors."""
+    query = "SELECT * FROM combined_taxi_data;"  # Replace 'your_table' with actual table name
+    try:
+        df = pd.read_sql(query, conn)
+        return df
+    except Exception as e:
+        st.error(f"❌ Error fetching data: {e}")
+        return pd.DataFrame()
+
+data_s = fetch_data()
+if not data_s.empty:
     st.write("### 📊 Sample Data from PostgreSQL")
-    st.dataframe(data)
+    st.dataframe(data_s)
 else:
     st.warning("⚠️ No data retrieved. Check your query or database connection.")
-
-# Convert the dropoff_date column to datetime
+data = fetch_all_data()
 data['dropoff_date'] = pd.to_datetime(data['dropoff_date'], errors='coerce')
-
-# Drop rows with invalid or missing dates
 data = data.dropna(subset=['dropoff_date'])
 
-# Extract year and month
+# Step 2: Extract year and month
 data['year'] = data['dropoff_date'].dt.year
 data['month'] = data['dropoff_date'].dt.month
 data['month_name'] = data['dropoff_date'].dt.strftime('%b')
 
-# Group by year and month
-monthly_rides = data.groupby(['year', 'month_name']).size().reset_index(name='ride_count')
-
-# Ensure month order is correct
-month_order = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
-               'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-monthly_rides['month_name'] = pd.Categorical(monthly_rides['month_name'], categories=month_order, ordered=True)
-monthly_rides = monthly_rides.sort_values(['month_name'])
-
-# Add checkboxes for years
+# Step 3: Filter years via checkboxes
 st.sidebar.markdown("### 📅 Choose Years to Display")
 years_available = [2019, 2021, 2023]
 selected_years = [year for year in years_available if st.sidebar.checkbox(str(year), value=True)]
 
-# Filter data
-filtered_data = monthly_rides[monthly_rides['year'].isin(selected_years)]
+# Step 4: Filter dataset for selected years
+filtered_data = data[data['year'].isin(selected_years)]
 
-if not filtered_data.empty:
-    # Plot using Plotly
-    fig = px.bar(filtered_data, x='month_name', y='ride_count', color='year',
-                 barmode='group',
-                 labels={'ride_count': 'Number of Rides', 'month_name': 'Month'},
-                 title='📊 Monthly Ride Count Comparison')
-    st.plotly_chart(fig)
+# Step 5: Build a complete DataFrame with 12 months per year (fill missing months with 0)
+all_combinations = pd.MultiIndex.from_product(
+    [selected_years, range(1, 13)], names=['year', 'month']
+).to_frame(index=False)
+
+# Merge with actual ride counts
+monthly_counts = (
+    filtered_data.groupby(['year', 'month'])
+    .size()
+    .reset_index(name='ride_count')
+)
+
+full_data = pd.merge(all_combinations, monthly_counts, on=['year', 'month'], how='left')
+full_data['ride_count'] = full_data['ride_count'].fillna(0).astype(int)
+full_data['month_name'] = full_data['month'].apply(lambda m: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][m-1])
+full_data['month_name'] = pd.Categorical(full_data['month_name'],
+                                         categories=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+                                         ordered=True)
+
+# Step 6: Plot
+if not selected_years:
+    st.warning("⚠️ No year selected. Please check at least one year to show data.")
 else:
-    st.warning("⚠️ No data selected. Please choose at least one year from the sidebar.")
+    full_data['year'] = full_data['year'].astype(str)  # Make it categorical
+    fig = px.bar(
+        full_data,
+        x='month_name',
+        y='ride_count',
+        color='year',
+        barmode='group',
+        title='📊 Monthly Ride Count Comparison',
+        labels={'ride_count': 'Number of Rides', 'month_name': 'Month'}
+    )
+    st.plotly_chart(fig)
 
-
-
+st.dataframe(full_data)
 
 
 
