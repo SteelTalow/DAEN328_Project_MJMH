@@ -6,6 +6,10 @@ import json  # To handle JSON data from APIs
 import os # working with operating system functions
 
 #Function to fetch api data. Repurposed from assignment 1
+base_dir = os.path.dirname(os.path.abspath(__file__))
+data_dir = os.path.join(base_dir, "Data")
+os.makedirs(data_dir, exist_ok=True)
+
 def fetch_api_data(api_url, output_file, tot_records, batch_size=100, num_records=None):
     """
     Fetches all data from the API in chunks using $limit and $offset parameters, 
@@ -82,7 +86,7 @@ def fetch_api_data(api_url, output_file, tot_records, batch_size=100, num_record
 api_url_2023 = "https://data.cityofnewyork.us/resource/4b4i-vvec.json"
  
 # Store json data set
-json_file_path_2023 = "Json_data/api_data_taxi_2023.json"
+json_file_path_2023 = os.path.join(data_dir, "api_data_taxi_2023.json")
 
 # Fetch the data
 api_data_2023 = fetch_api_data(api_url = api_url_2023, output_file = json_file_path_2023,tot_records = 38310226, batch_size=100, num_records=100)
@@ -93,12 +97,12 @@ print(f"Total records fetched: {len(api_data_2023)}")
 
 #Data for 2019
 api_url_2019 = "https://data.cityofnewyork.us/resource/2upf-qytp.json"
-json_file_path_2019 = "Json_data/api_data_taxi_2019.json"
+json_file_path_2019 = os.path.join(data_dir, "api_data_taxi_2019.json")
 api_data_2019 = fetch_api_data(api_url = api_url_2019, output_file = json_file_path_2019,tot_records = 84399019, batch_size=100, num_records=100)
 print(f"Total records fetched: {len(api_data_2019)}")
 
 #Data for 2021
 api_url_2021 = "https://data.cityofnewyork.us/resource/m6nq-qud6.json"  
-json_file_path_2021 = "Json_data/api_data_taxi_2021.json"
+json_file_path_2021 = os.path.join(data_dir, "api_data_taxi_2021.json")
 api_data_2021 = fetch_api_data(api_url = api_url_2021, output_file = json_file_path_2021,tot_records = 30904072, batch_size=100, num_records=100)
 print(f"Total records fetched: {len(api_data_2021)}")
