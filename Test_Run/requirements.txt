@@ -6,4 +6,5 @@ pandas
 streamlit
 numpy
 plotly
+matplotlib
 
