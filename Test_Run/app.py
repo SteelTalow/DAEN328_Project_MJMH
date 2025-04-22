@@ -169,6 +169,46 @@ st.pyplot(fig)
 st.dataframe(full_data)
 
 
+data['pickup_datetime'] = pd.to_datetime(data['pickup_date'] + ' ' + data['pickup_time'], errors='coerce')
+
+data['year'] = data['pickup_datetime'].dt.year
+data['month'] = data['pickup_datetime'].dt.month
+
+if data['total_time'].dtype == 'object':
+    data['total_time'] = pd.to_timedelta(data['total_time'], errors='coerce')
+
+data['total_minutes'] = data['total_time'].dt.total_seconds() / 60
+
+duration_filtered = data[data['year'].isin([2019, 2021, 2023])]
+duration_filtered = duration_filtered.dropna(subset=['total_minutes'])
+
+monthly_avg_duration = (
+    duration_filtered.groupby(['year', 'month'])['total_minutes']
+    .mean()
+    .reset_index()
+)
+
+monthly_avg_duration['month_name'] = monthly_avg_duration['month'].apply(
+    lambda m: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][m-1]
+)
+monthly_avg_duration['month_name'] = pd.Categorical(
+    monthly_avg_duration['month_name'],
+    categories=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+    ordered=True
+)
+monthly_avg_duration['year'] = monthly_avg_duration['year'].astype(str)
+
+st.markdown("## 📈 Average Ride Duration per Month by Year")
+fig = px.line(
+    monthly_avg_duration,
+    x='month_name',
+    y='total_minutes',
+    color='year',
+    markers=True,
+    title='📈 Average Ride Duration (in Minutes) by Month',
+    labels={'total_minutes': 'Average Duration (minutes)', 'month_name': 'Month'}
+)
+st.plotly_chart(fig)
 
 # Ensure Connection is Closed After Execution
 
