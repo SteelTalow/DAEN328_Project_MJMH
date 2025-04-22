@@ -143,8 +143,10 @@ else:
         labels={'mta_tax_ratio': 'MTA Tax / Fare Amount', 'month_name': 'Month'}
     )
     st.plotly_chart(fig_line)
+#Begin Passenger count
 
 # Extract the year directly from the first 4 characters of 'pickup_date'
+data = fetch_all_data()
 data['year'] = data['pickup_date'].astype(str).str[:4]
 data['year'] = data['year'].astype(int)
 
