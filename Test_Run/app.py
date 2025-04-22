@@ -180,7 +180,9 @@ if data['total_time'].dtype == 'object':
 data['total_minutes'] = data['total_time'].dt.total_seconds() / 60
 
 duration_filtered = data[data['year'].isin([2019, 2021, 2023])]
+
 duration_filtered = duration_filtered.dropna(subset=['total_minutes'])
+duration_filtered = duration_filtered[duration_filtered['total_minutes'] > 0]
 
 monthly_avg_duration = (
     duration_filtered.groupby(['year', 'month'])['total_minutes']
