@@ -212,6 +212,52 @@ fig = px.line(
 )
 st.plotly_chart(fig)
 
+
+# --- 💵 Avg Tip per Ride by Passenger Count (Line Chart) ---
+st.markdown("## 💵 Average Tip per Ride by Passenger Count (by Year)")
+
+# Ensure passenger_count and tip_amount are clean
+tip_data = filtered_data[
+    (filtered_data['tip_amount'].notna()) &
+    (filtered_data['tip_amount'] >= 0) &
+    (filtered_data['passenger_count'].notna())
+]
+tip_data = tip_data[(tip_data['passenger_count'] > 0) & (tip_data['passenger_count'] <= 6)]
+
+# Group by year and passenger count
+tip_by_passenger = (
+    tip_data.groupby(['year', 'passenger_count'])
+    .agg(
+        total_tip=('tip_amount', 'sum'),
+        ride_count=('tip_amount', 'count')
+    )
+    .reset_index()
+)
+
+tip_by_passenger['avg_tip_per_ride'] = tip_by_passenger['total_tip'] / tip_by_passenger['ride_count']
+tip_by_passenger['year'] = tip_by_passenger['year'].astype(str)
+
+# Sort values to keep line plots clean
+tip_by_passenger = tip_by_passenger.sort_values(by=['year', 'passenger_count'])
+
+# Plot
+fig_tip_line = px.line(
+    tip_by_passenger,
+    x='passenger_count',
+    y='avg_tip_per_ride',
+    color='year',
+    markers=True,
+    title='💵 Average Tip per Ride by Passenger Count (Grouped by Year)',
+    labels={
+        'passenger_count': 'Passenger Count',
+        'avg_tip_per_ride': 'Avg Tip per Ride ($)',
+        'year': 'Year'
+    }
+)
+st.plotly_chart(fig_tip_line)
+
+
+
 # Ensure Connection is Closed After Execution
 
 #conn.close()
