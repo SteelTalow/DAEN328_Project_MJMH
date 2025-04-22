@@ -116,6 +116,33 @@ else:
     )
     st.plotly_chart(fig)
 
+   # --- 📈 Normalized MTA Tax (per Fare Amount) Line Plot ---
+    normalized_data = filtered_data.copy()
+    normalized_data = normalized_data[(normalized_data['fare_amount'] > 0) & (normalized_data['mta_tax'].notna())]
+
+    normalized_data['mta_tax_ratio'] = normalized_data['mta_tax'] / normalized_data['fare_amount']
+
+    mta_ratio_avg = (
+        normalized_data.groupby(['year', 'month'])['mta_tax_ratio']
+        .mean()
+        .reset_index()
+    )
+    mta_ratio_avg['month_name'] = mta_ratio_avg['month'].apply(lambda m: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][m-1])
+    mta_ratio_avg['month_name'] = pd.Categorical(mta_ratio_avg['month_name'],
+                                                 categories=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+                                                 ordered=True)
+    mta_ratio_avg['year'] = mta_ratio_avg['year'].astype(str)
+
+    fig_line = px.line(
+        mta_ratio_avg,
+        x='month_name',
+        y='mta_tax_ratio',
+        color='year',
+        title='📈 Normalized MTA Tax (as % of Fare Amount)',
+        markers=True,
+        labels={'mta_tax_ratio': 'MTA Tax / Fare Amount', 'month_name': 'Month'}
+    )
+    st.plotly_chart(fig_line)
 
 # Extract the year directly from the first 4 characters of 'pickup_date'
 data['year'] = data['pickup_date'].astype(str).str[:4]
