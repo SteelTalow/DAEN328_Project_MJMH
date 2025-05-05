@@ -17,6 +17,15 @@ This project utilizes the **New York City Yellow Taxi Trip Records API** provide
 run docker-compose up --build
 # 
 access by going to http://localhost:8501
+
+# Streamlit visualizations
+![Ride numbers per month](image.png)
+#
+![Passenger count per year](image-3.png)
+#
+![Tax rate over time](image-1.png)
+#
+![Ride duration per month](image-2.png)
   
 # Members
 Jameson Adams - exporting data, streamlit, data visualization
