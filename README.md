@@ -20,8 +20,11 @@ access by going to http://localhost:8501
   
 # Members
 Jameson Adams - exporting data, streamlit, data visualization
+#
 Henry Supp - transforming data, data visualization
+#
 George Mathew - transforming data, data visualization
+#
 Michael Ybarra - Docker, data visualization
 
 
