@@ -15,6 +15,7 @@ This project utilizes the **New York City Yellow Taxi Trip Records API** provide
 
 # How to RUN
 run docker-compose up --build
+# 
 access by going to http://localhost:8501
   
 # Members
