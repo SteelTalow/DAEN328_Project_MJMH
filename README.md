@@ -14,6 +14,11 @@ This project utilizes the New York City Yellow Taxi Trip Records API provided by
 This project utilizes the **New York City Yellow Taxi Trip Records API** provided by the [NYC Open Data Portal](https://data.cityofnewyork.us/). 
 
 # How to RUN
+
+Download the Test_Run folder via your preferred method.  
+Open a command prompt or appropriate terminal and change directory to the downloaded folder.  
+With Docker desktop running, run:
+
 run docker-compose up --build
 # 
 access by going to http://localhost:8501
